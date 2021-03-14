@@ -1,9 +1,11 @@
 package com.example.springcache.service;
 
+import com.example.springcache.domain.Classification;
 import com.example.springcache.entity.ClassificationEntity;
 import com.example.springcache.exceptions.RecordNotFoundException;
 import com.example.springcache.interfaces.ClassificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -37,5 +39,9 @@ public class ClassificationService {
         } else {
             throw new RecordNotFoundException("No classification record exist for given id");
         }
+    }
+    @CacheEvict(value = "classifications", key = "#id")
+    public ClassificationEntity updateClassificationById(int id , ClassificationEntity classification) {
+        return repository.save(classification);
     }
 }
